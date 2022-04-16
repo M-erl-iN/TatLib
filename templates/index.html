@@ -1,0 +1,12 @@
+{% extends "base.html" %} {% block content %}
+
+<div>
+    это главная
+    {% if current_user.is_authenticated %}
+        {{ current_user.name }} авторизированн
+    {% else %}
+        никто не авторизирован
+    {% endif %}
+</div>
+
+{% endblock %}
