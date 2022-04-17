@@ -1,0 +1,10 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+    <h1>{{ current_user.name }}</h1>
+    <a href="/books">добавленные книги и тексты</a>
+    <a href="/words">добавленные книги и тексты</a>
+    <a href="/logout">выйти</a>
+</div>
+
+{% endblock %}

@@ -1,0 +1,93 @@
+[33mcommit 9e6198b762c02117ab9f68e21ba75fc155a6ecba[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 18:24:24 2022 +0300
+
+    fix db
+
+[33mcommit 59856022acc7e2db7cf07b1083bd842af29f25fc[m
+Merge: f582e79 dd927b7
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 18:19:07 2022 +0300
+
+    pull
+
+[33mcommit f582e79e50e86880767cf1c3fd9f99d6f5e0eac3[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 18:17:59 2022 +0300
+
+    add templates, forms
+
+[33mcommit dd927b78d63a9a451821744cf7b01780c6267abd[m
+Author: M_erl_iN <erlan10122005@gmail.com>
+Date:   Sat Apr 16 17:50:47 2022 +0300
+
+    add examples to data
+
+[33mcommit 54f19fb21c5ac7a28c934f04accabc53656fd415[m
+Merge: b5e876c 0d89adc
+Author: M_erl_iN <erlan10122005@gmail.com>
+Date:   Sat Apr 16 16:56:54 2022 +0300
+
+    create second training
+
+[33mcommit b5e876cfb8da323716e2b3e0ffbc641509a5ee6e[m
+Merge: ca35c5c b4a2979
+Author: M_erl_iN <erlan10122005@gmail.com>
+Date:   Sat Apr 16 13:45:57 2022 +0300
+
+    add quiz
+
+[33mcommit 0d89adc18c7c4ef3326d5c9bc69f665019b4a844[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 13:44:46 2022 +0300
+
+    add htmls
+
+[33mcommit ca35c5c15343a29a6e69bf22ee96c25748b8ad4f[m
+Author: M_erl_iN <erlan10122005@gmail.com>
+Date:   Sat Apr 16 11:51:49 2022 +0300
+
+    quiz_1
+
+[33mcommit 8302f4680d821873fbf74f54627c6158eb89f3e1[m
+Merge: 2ff47c1 1183591
+Author: M_erl_iN <erlan10122005@gmail.com>
+Date:   Sat Apr 16 11:43:33 2022 +0300
+
+    quiz_1
+
+[33mcommit b4a29796760aab9afbf71a9ebd07c73eb64dc3eb[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 09:17:37 2022 +0300
+
+    full api
+
+[33mcommit 2ff47c13bde8b3ac297c03399c047fc86e0164ff[m
+Author: M_erl_iN <erlan10122005@gmail.com>
+Date:   Sat Apr 16 03:07:00 2022 +0300
+
+    quiz_1
+
+[33mcommit 1183591391f1fcb7a9951ed760f2d3299fe8c1d9[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 02:35:07 2022 +0300
+
+    fix
+
+[33mcommit da15fe95f9a053b28687e1b33eb7a8cd74922a14[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 02:31:37 2022 +0300
+
+    add books, users, words apies
+
+[33mcommit bb0a81c85639f66b72bd8131688109151ccab4fc[m
+Author: pro_stak666 <mineev_kirill2005@mail.ru>
+Date:   Sat Apr 16 00:10:27 2022 +0300
+
+    initial commit
+
+[33mcommit 811cffbd8cc59d3b916dce42de5c1a6bcf6c1d88[m
+Author: Kaler654 <63152258+Kaler654@users.noreply.github.com>
+Date:   Fri Apr 15 19:01:55 2022 +0300
+
+    Initial commit

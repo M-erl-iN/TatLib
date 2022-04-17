@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block content %}
+
+<div class="container">
+    <a href="/add_text">добавить книгу/текст</a>
+    <div>
+        <p>Сложность</p>
+        <a href="/books_and_texts/0">Любая</a>
+        <a href="/books_and_texts/1">Новичок</a>
+        <a href="/books_and_texts/2">Средний</a>
+        <a href="/books_and_texts/3">Профи</a>
+    </div>
+    <div>
+        <form class="d-flex" method="POST">
+            <input class="form-control me-2" type="text" name="field" placeholder="Поиск">
+            <input class="btn btn-outline-success" type="submit" name="search" value="поиск"></input>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Сложность</th>
+            <th scope="col">название</th>
+            <th scope="col">автор</th>
+            <th scope="col">кол-во страниц</th>
+        </tr>
+        </thead>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.level_id }}</td>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.pages }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
