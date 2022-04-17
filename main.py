@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, request, make_response, jsonify
-import datetime
+from flask import Flask, render_template, redirect, request, make_response, jsonify, url_for
+import datetime, time
+from os import remove
 from random import shuffle, choice
 from data import db_session, books_api, users_api, words_api, levels_api, word_levels_api
 from data.users import User
@@ -13,6 +14,18 @@ from forms.login import LoginForm
 from forms.register import RegisterForm
 from forms.quiz import QuizForm
 from flask_login import LoginManager, current_user, login_user, login_required, logout_user, mixins
+import requests
+
+
+def sound_the_word(word, filename):
+    r = requests.get('https://speech.tatar/synthesize_tatar_hack', params={"text": word},
+                     headers={'Content-Type': 'audio/wav'})
+    filename = f'media/{filename}.wav'
+    a = open("static/" + filename, 'wb')
+    a.write(r.content)
+    a.close()
+    return filename
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -63,6 +76,42 @@ def training_dict():
                 try_list = [i[0] for i in final_dict[word][2]]
                 if ch.word not in try_list:
                     final_dict[word][2].append(ch.word_ru)
+            shuffle(final_dict[word][2])
+            for i in range(len(final_dict[word][2])):
+                ind = 1 if final_dict[word][2][i] == final_dict[word][1] else 0
+                final_dict[word][2][i] = (final_dict[word][2][i], ind)
+    return final_dict
+
+
+def training2_dict():
+    now_time = datetime.datetime.now()
+    final_dict = []
+    wordlist = list(quiz_analyze_session.query(Word).all())
+    userwordlist = list(quiz_analyze_session.query(Word).filter(Word.id.in_(
+        [int(i) for i in current_user.words.split(',')])).all())
+    shuffle(wordlist)
+    shuffle(userwordlist)
+    for word in range(len(userwordlist)):
+        word_level = quiz_analyze_session.query(Word_level).filter(Word_level.word_id == userwordlist[word].id,
+                                                                   Word_level.user_id == current_user.id).first()
+        date = word_level.date
+        stage = word_level.word_level
+        if stage == 8:
+            quiz_analyze_session.delete(userwordlist[word], word_level)
+            quiz_analyze_session.commit()
+        last_time = datetime.datetime.fromisoformat(str(date))  # ДД-ММ-ГГ
+        limit_timedelta = datetime.timedelta(days=table_stage2time[stage])
+        """word_level.word_level += 1
+        quiz_analyze_session.commit()"""
+        if (now_time - last_time) > limit_timedelta:
+            final_dict.append([userwordlist[word].word])
+            final_dict[word].append(userwordlist[word].word_ru)
+            final_dict[word].append([userwordlist[word].word])
+            while len(final_dict[word][2]) < 4:
+                ch = choice(wordlist)
+                try_list = [i[0] for i in final_dict[word][2]]
+                if ch.word not in try_list:
+                    final_dict[word][2].append(ch.word)
             shuffle(final_dict[word][2])
             for i in range(len(final_dict[word][2])):
                 ind = 1 if final_dict[word][2][i] == final_dict[word][1] else 0
@@ -338,43 +387,47 @@ def training1_result():
 def training2_form():
     if request.method == 'GET' and not isinstance(current_user, mixins.AnonymousUserMixin):
         try:
-            if user_progress[current_user.id]["tr2"]["training2_number"] == user_progress[current_user.id]["tr2"]['train_len']:
+            if user_progress[current_user.id]["tr2"]["question_training_number"] == \
+                    user_progress[current_user.id]["tr2"]['train_len']:
                 try:
                     user_progress[current_user.id]["tr2"] = {'id': current_user.id, 'question_training_number': 0,
-                                                      'count_training': 0, 'showed': False,
-                                                      'training_program': training_dict()}
-                    user_progress[current_user.id]["tr2"]['train_len'] = len(user_progress[current_user.id]["tr2"]['training_program'])
+                                                             'count_training': 0, 'showed': False,
+                                                             'training_program': training2_dict()}
+                    user_progress[current_user.id]["tr2"]['train_len'] = len(
+                        user_progress[current_user.id]["tr2"]['training_program'])
                 except KeyError:
                     user_progress[current_user.id] = {}
                     user_progress[current_user.id]["tr2"] = {'id': current_user.id, 'question_training_number': 0,
                                                              'count_training': 0, 'showed': False,
-                                                             'training_program': training_dict()}
+                                                             'training_program': training2_dict()}
                     user_progress[current_user.id]["tr2"]['train_len'] = len(
                         user_progress[current_user.id]["tr2"]['training_program'])
         except:
             try:
                 user_progress[current_user.id]["tr2"] = {'id': current_user.id, 'question_training_number': 0,
                                                          'count_training': 0, 'showed': False,
-                                                         'training_program': training_dict()}
+                                                         'training_program': training2_dict()}
                 user_progress[current_user.id]["tr2"]['train_len'] = len(
                     user_progress[current_user.id]["tr2"]['training_program'])
             except KeyError:
                 user_progress[current_user.id] = {}
                 user_progress[current_user.id]["tr2"] = {'id': current_user.id, 'question_training_number': 0,
                                                          'count_training': 0, 'showed': False,
-                                                         'training_program': training_dict()}
+                                                         'training_program': training2_dict()}
                 user_progress[current_user.id]["tr2"]['train_len'] = len(
                     user_progress[current_user.id]["tr2"]['training_program'])
         num = user_progress[current_user.id]["tr2"]['question_training_number']
         train = user_progress[current_user.id]["tr2"]['training_program']
+        fn = sound_the_word(train[num][0], current_user.name)
         params = {
-            'question': train[num][0],
             'answers': train[num][2],
             'current_answer': train[num][1],
-            'title': 'Training' + train[num][0]
+            'aud': fn
         }
-        return render_template('training1.html', **params)
+        print(f"../static/media/{current_user.name}.wav")
+        return render_template('training2.html', **params)
     elif request.method == 'POST' and type(current_user) != "AnonymousUserMixin":
+        remove(f'static/media/{current_user.name}.wav')
         num = user_progress[current_user.id]["tr2"]['question_training_number']
         train = user_progress[current_user.id]["tr2"]['training_program']
         if request.form is not None:
@@ -388,9 +441,10 @@ def training2_form():
                 elif int(request.form["options"]) == 0:
                     last_word.level = 0
                 quiz_analyze_session.commit()
-        if user_progress[current_user.id]["tr2"]['question_training_number'] == user_progress[current_user.id]["tr2"]['train_len']:
-            return redirect('/training/1_result')
-        return redirect('/training/1')
+        if user_progress[current_user.id]["tr2"]['question_training_number'] == user_progress[current_user.id]["tr2"][
+            'train_len']:
+            return redirect('/training/2_result')
+        return redirect('/training/2')
     else:
         return redirect('/register')
 
@@ -422,7 +476,7 @@ def training2_result():
     user.level_id = id_
     quiz_analyze_session.commit()
     user_progress[current_user.id]["tr2"]["showed"] = True
-    return render_template('training_rezult.html', **params)
+    return render_template('training/2_rezult.html', **params)
 
 
 @app.route('/training/3', methods=['GET', 'POST'])
